@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LinguaStep</string>
+    <string name="reminder_channel_name">Daily Practice Reminders</string>
+    <string name="reminder_channel_desc">Reminds you to complete your 2-minute daily English lesson</string>
+    <string name="reminder_notification_title">Time for your 2-minute English workout!</string>
+    <string name="reminder_notification_text">Keep your streak alive — jump into today\'s lesson.</string>
+</resources>
