@@ -1,0 +1,82 @@
+{
+  "app": {
+    "title": "OBD2 Scanner",
+    "tagline": "Diagnose and clear your vehicle's fault codes"
+  },
+  "nav": {
+    "connect": "Connect",
+    "dashboard": "Vehicle",
+    "dtc": "Fault Codes",
+    "liveData": "Live Data"
+  },
+  "connect": {
+    "heading": "Connect to your vehicle",
+    "description": "Plug an ELM327 OBD2 adapter into your vehicle's OBD2 port (usually under the dashboard), turn the ignition on, then connect below.",
+    "bluetooth": "Connect via Bluetooth",
+    "usb": "Connect via USB",
+    "connecting": "Connecting…",
+    "connected": "Connected to {{label}}",
+    "disconnect": "Disconnect",
+    "notSupportedBluetooth": "Web Bluetooth isn't supported in this browser. Try Chrome or Edge on desktop or Android.",
+    "notSupportedSerial": "Web Serial (USB) isn't supported in this browser. Try Chrome or Edge on desktop.",
+    "error": "Connection failed: {{message}}",
+    "readingVehicle": "Reading vehicle identity…",
+    "retry": "Retry"
+  },
+  "vehicle": {
+    "heading": "Vehicle information",
+    "vin": "VIN",
+    "make": "Make",
+    "model": "Model",
+    "year": "Model Year",
+    "trim": "Trim",
+    "engine": "Engine",
+    "fuelType": "Fuel Type",
+    "bodyClass": "Body Type",
+    "unknown": "Unknown",
+    "offlineNotice": "Couldn't reach the online VIN database — showing limited offline info.",
+    "notConnected": "Connect to a vehicle first to read its information automatically."
+  },
+  "dtc": {
+    "heading": "Diagnostic Trouble Codes",
+    "scan": "Scan for codes",
+    "scanning": "Scanning…",
+    "clear": "Clear all codes",
+    "clearing": "Clearing…",
+    "clearConfirmTitle": "Clear all fault codes?",
+    "clearConfirmBody": "This will erase all stored and pending trouble codes and turn off the check-engine light. Only do this after the underlying problem has been fixed, or you may lose evidence needed to diagnose a recurring fault.",
+    "clearConfirmAction": "Yes, clear codes",
+    "clearConfirmCancel": "Cancel",
+    "clearSuccess": "Codes cleared successfully.",
+    "noCodesStored": "No stored fault codes. Your vehicle reports no confirmed issues.",
+    "noCodesPending": "No pending fault codes.",
+    "stored": "Stored codes",
+    "pending": "Pending codes",
+    "code": "Code",
+    "description": "Description"
+  },
+  "liveData": {
+    "heading": "Live sensor data",
+    "start": "Start live data",
+    "stop": "Stop",
+    "rpm": "Engine RPM",
+    "speed": "Vehicle Speed",
+    "coolantTemp": "Coolant Temperature",
+    "intakeTemp": "Intake Air Temperature",
+    "throttle": "Throttle Position",
+    "engineLoad": "Engine Load",
+    "intakePressure": "Intake Manifold Pressure",
+    "maf": "Mass Air Flow",
+    "fuelLevel": "Fuel Level",
+    "batteryVoltage": "Battery Voltage",
+    "ambientTemp": "Ambient Temperature",
+    "fuelConsumption": "Fuel Consumption",
+    "fuelConsumptionUnit": "L/100km",
+    "fuelRateUnit": "L/h",
+    "notAvailable": "Not available on this vehicle"
+  },
+  "common": {
+    "back": "Back",
+    "language": "اللغة / Language"
+  }
+}
