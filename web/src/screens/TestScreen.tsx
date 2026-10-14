@@ -3,6 +3,7 @@ import { PLACEMENT_QUESTIONS, tierForScore } from "../data/placementTest";
 import { store } from "../db";
 import { speak } from "../tts";
 import type { UserProgress } from "../types";
+import { CheckCircleIcon, SpeakerIcon } from "../components/Icons";
 
 export function TestScreen() {
   const [index, setIndex] = useState(0);
@@ -49,10 +50,17 @@ export function TestScreen() {
       B2: "Upper-Intermediate — let's tackle advanced vocabulary."
     };
     return (
-      <div>
-        <h1 className="screen-title">Your level: {resultCefr}</h1>
-        <p>{description[resultCefr]}</p>
-        <button className="btn btn-primary" onClick={restart}>
+      <div style={{ textAlign: "center", paddingTop: 40 }}>
+        <div style={{ color: "var(--system-green)", display: "flex", justifyContent: "center", marginBottom: 8 }}>
+          <div style={{ width: 56, height: 56 }}>
+            <CheckCircleIcon />
+          </div>
+        </div>
+        <h1 className="large-title" style={{ textAlign: "center" }}>
+          Level: {resultCefr}
+        </h1>
+        <p className="text-muted">{description[resultCefr]}</p>
+        <button className="btn btn-primary" onClick={restart} style={{ marginTop: 8 }}>
           Retake test
         </button>
       </div>
@@ -64,29 +72,33 @@ export function TestScreen() {
 
   return (
     <div>
-      <h1 className="screen-title">Test Your Language</h1>
-      <div className="progress-track" style={{ marginBottom: 16 }}>
-        <div className="progress-fill" style={{ width: `${progressFraction * 100}%` }} />
+      <div className="nav-header">
+        <h1 className="large-title">Placement Test</h1>
+        <div className="progress-track" style={{ marginBottom: 12 }}>
+          <div className="progress-fill" style={{ width: `${progressFraction * 100}%` }} />
+        </div>
       </div>
 
-      <p style={{ fontWeight: 600 }}>{sectionLabel}</p>
-      <div className="row" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
-        <p style={{ flex: 1 }}>{question.prompt}</p>
-        {question.audioWord && (
-          <button className="btn-icon" onClick={() => speak(question.audioWord!)} aria-label="Play audio">
-            {"\u{1F50A}"}
-          </button>
-        )}
+      <span className="chip accent">{sectionLabel}</span>
+
+      <div className="card" style={{ marginTop: 14 }}>
+        <div className="row" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
+          <p style={{ flex: 1, margin: 0, fontSize: 17 }}>{question.prompt}</p>
+          {question.audioWord && (
+            <button className="btn-icon" onClick={() => speak(question.audioWord!)} aria-label="Play audio">
+              <SpeakerIcon />
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="spacer-sm" />
       {question.options.map((option) => {
         const isSelected = selected === option;
-        let cls = "btn btn-outline";
+        let cls = "btn btn-outline btn-full";
         if (isSelected) cls += option === question.correctAnswer ? " correct" : " wrong";
         return (
           <div key={option} style={{ marginBottom: 8 }}>
-            <button className={cls} style={{ width: "100%" }} onClick={() => selectOption(option)}>
+            <button className={cls} onClick={() => selectOption(option)}>
               {option}
             </button>
           </div>
@@ -94,7 +106,7 @@ export function TestScreen() {
       })}
 
       <div className="spacer-sm" />
-      <button className="btn btn-primary" style={{ width: "100%" }} onClick={nextQuestion} disabled={!selected}>
+      <button className="btn btn-primary btn-full" onClick={nextQuestion} disabled={!selected}>
         Next
       </button>
     </div>

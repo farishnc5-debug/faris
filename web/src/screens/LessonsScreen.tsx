@@ -3,6 +3,7 @@ import { todaysLesson } from "../data/lessons";
 import { store } from "../db";
 import { speak } from "../tts";
 import { useAppState } from "../hooks/useStore";
+import { SpeakerIcon } from "../components/Icons";
 
 export function LessonsScreen() {
   const state = useAppState();
@@ -32,26 +33,28 @@ export function LessonsScreen() {
 
   return (
     <div>
-      <h1 className="screen-title">Today's 2-Minute Lesson</h1>
-      <div className="spacer-sm" />
-      <span className="chip">{completedToday ? "Completed today ✓" : "Goal: 2 minutes"}</span>
+      <div className="nav-header">
+        <h1 className="large-title">Lessons</h1>
+        <span className={`chip${completedToday ? " accent" : ""}`}>
+          {completedToday ? "Completed today" : "Goal: 2 minutes"}
+        </span>
+      </div>
 
-      <div className="spacer-md" />
-      <div className="card">
-        <h2>Target words</h2>
-        {lesson.targetWords.map((word) => (
-          <div key={word} className="row">
+      <div className="group-label">Target words</div>
+      <div className="inset-group">
+        {lesson.targetWords.map((word, i) => (
+          <div className="inset-row" key={word} style={{ borderBottom: i === lesson.targetWords.length - 1 ? "none" : undefined }}>
             <span>{word}</span>
             <button className="btn-icon" onClick={() => speak(word)} aria-label={`Hear pronunciation of ${word}`}>
-              {"\u{1F50A}"}
+              <SpeakerIcon />
             </button>
           </div>
         ))}
       </div>
 
-      <div className="card">
-        <h2>Fill in the blank</h2>
-        <p>{lesson.fillBlankSentence}</p>
+      <div className="group-label">Fill in the blank</div>
+      <div className="card" style={{ marginBottom: 16 }}>
+        <p style={{ margin: "0 0 14px" }}>{lesson.fillBlankSentence}</p>
         <div className="row-wrap">
           {lesson.fillBlankOptions.map((option) => {
             const isSelected = fillSelection === option;
@@ -65,37 +68,33 @@ export function LessonsScreen() {
           })}
         </div>
         {fillSelection && (
-          <>
-            <div className="spacer-sm" />
-            <p className={fillCorrect ? "text-success" : "text-error"}>
-              {fillCorrect ? "Correct!" : `Not quite — the answer is ${lesson.fillBlankAnswer}.`}
-            </p>
-          </>
+          <p className={fillCorrect ? "text-success" : "text-error"} style={{ marginTop: 12, marginBottom: 0, fontWeight: 600 }}>
+            {fillCorrect ? "Correct!" : `Not quite — the answer is ${lesson.fillBlankAnswer}.`}
+          </p>
         )}
       </div>
 
-      <div className="card">
-        <h2>Build the sentence</h2>
-        <p className="text-muted">
+      <div className="group-label">Build the sentence</div>
+      <div className="card" style={{ marginBottom: 24 }}>
+        <p className="text-muted" style={{ marginTop: 0 }}>
           Tap the words in the correct order: {lesson.sentenceBuildingWords.join(" / ")}
         </p>
         <button className="btn btn-primary" onClick={checkSentence}>
           Check sentence order
         </button>
         {sentenceChecked && (
-          <>
-            <div className="spacer-sm" />
-            <p className="text-success">Correct! Great sentence building.</p>
-          </>
+          <p className="text-success" style={{ fontWeight: 600, marginBottom: 0 }}>
+            Correct! Great sentence building.
+          </p>
         )}
       </div>
 
-      <button className="btn btn-primary" style={{ width: "100%" }} onClick={completeLesson} disabled={completedToday}>
+      <button className="btn btn-primary btn-full" onClick={completeLesson} disabled={completedToday}>
         {completedToday ? "Lesson complete" : "Mark lesson complete"}
       </button>
 
       {state.progress.quizzesTaken > 0 && (
-        <p className="text-muted" style={{ marginTop: 12, fontSize: 13 }}>
+        <p className="text-muted" style={{ marginTop: 14, fontSize: 13, textAlign: "center" }}>
           Lifetime quiz accuracy: {Math.round((state.progress.quizzesCorrect / state.progress.quizzesTaken) * 100)}%
         </p>
       )}

@@ -1,10 +1,12 @@
+import { BookIcon, ChartIcon, LetterIcon, TargetIcon } from "./Icons";
+
 export type Tab = "lessons" | "vocabulary" | "test" | "progress";
 
-const TABS: { id: Tab; label: string; icon: string }[] = [
-  { id: "lessons", label: "Lessons", icon: "\u{1F4D6}" },
-  { id: "vocabulary", label: "Vocabulary", icon: "\u{1F524}" },
-  { id: "test", label: "Test", icon: "\u{1F3AF}" },
-  { id: "progress", label: "Progress", icon: "\u{1F4CA}" }
+const TABS: { id: Tab; label: string; Icon: (p: { filled?: boolean }) => JSX.Element }[] = [
+  { id: "lessons", label: "Lessons", Icon: BookIcon },
+  { id: "vocabulary", label: "Vocabulary", Icon: LetterIcon },
+  { id: "test", label: "Test", Icon: TargetIcon },
+  { id: "progress", label: "Progress", Icon: ChartIcon }
 ];
 
 interface Props {
@@ -15,15 +17,17 @@ interface Props {
 export function BottomNav({ active, onChange }: Props) {
   return (
     <nav className="bottom-nav">
-      {TABS.map((tab) => (
+      {TABS.map(({ id, label, Icon }) => (
         <button
-          key={tab.id}
+          key={id}
           type="button"
-          className={`nav-item${active === tab.id ? " active" : ""}`}
-          onClick={() => onChange(tab.id)}
+          className={`nav-item${active === id ? " active" : ""}`}
+          onClick={() => onChange(id)}
         >
-          <span className="nav-icon">{tab.icon}</span>
-          <span>{tab.label}</span>
+          <span className="nav-icon">
+            <Icon filled={active === id} />
+          </span>
+          <span>{label}</span>
         </button>
       ))}
     </nav>

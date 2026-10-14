@@ -40,67 +40,56 @@ export function DashboardScreen() {
 
   return (
     <div>
-      <h1 className="screen-title">Progress Dashboard</h1>
+      <div className="nav-header">
+        <h1 className="large-title">Progress</h1>
+      </div>
 
       <div className="stat-grid" style={{ marginBottom: 12 }}>
-        <StatCard title="Streak" value={`${progress.currentStreak}d`} colorVar="--amber" />
-        <StatCard title="Mastered" value={`${wordsMastered}`} colorVar="--emerald" />
+        <StatCard title="Streak" value={`${progress.currentStreak}d`} colorVar="--system-orange" />
+        <StatCard title="Mastered" value={`${wordsMastered}`} colorVar="--system-green" />
       </div>
       <div className="stat-grid" style={{ marginBottom: 20 }}>
-        <StatCard title="Accuracy" value={`${accuracyPercent}%`} colorVar="--teal-dark" />
-        <StatCard title="Total XP" value={`${progress.totalXp}`} colorVar="--teal-dark" />
+        <StatCard title="Accuracy" value={`${accuracyPercent}%`} colorVar="--system-blue" />
+        <StatCard title="Total XP" value={`${progress.totalXp}`} colorVar="--system-blue" />
       </div>
 
-      <span className="chip">CEFR level: {progress.proficiencyLevel}</span>
+      <span className="chip accent">CEFR level: {progress.proficiencyLevel}</span>
 
-      <div className="spacer-md" />
-      <p style={{ fontWeight: 600 }}>This week</p>
-      <div className="spacer-sm" />
-      <StreakCalendar history={streakHistory} />
-
-      <div className="spacer-md" />
+      <div className="group-label">This week</div>
       <div className="card">
-        <h2>Daily reminder</h2>
-        <div className="row" style={{ justifyContent: "space-between" }}>
-          <span>
-            {String(hour).padStart(2, "0")}:{String(minute).padStart(2, "0")}
-          </span>
+        <StreakCalendar history={streakHistory} />
+      </div>
+
+      <div className="group-label">Daily reminder</div>
+      <div className="inset-group">
+        <div className="inset-row">
+          <span>Reminders</span>
           <label className="switch">
-            <input
-              type="checkbox"
-              checked={progress.notificationsEnabled}
-              onChange={(e) => onToggleReminder(e.target.checked)}
-            />
+            <input type="checkbox" checked={progress.notificationsEnabled} onChange={(e) => onToggleReminder(e.target.checked)} />
+            <span className="track" />
+            <span className="thumb" />
           </label>
         </div>
-
-        <div className="spacer-sm" />
-        <input
-          type="time"
-          value={`${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`}
-          onChange={(e) => {
-            const [h, m] = e.target.value.split(":").map(Number);
-            onTimeChange(h, m);
-          }}
-          style={{
-            border: "1px solid var(--border)",
-            borderRadius: 8,
-            padding: "8px 10px",
-            background: "var(--surface)",
-            color: "var(--text)"
-          }}
-        />
-
-        {permissionDenied && (
-          <>
-            <div className="spacer-sm" />
-            <p className="text-error" style={{ fontSize: 13 }}>
-              Notification permission was denied. Allow notifications for this site in your browser settings to
-              enable reminders.
-            </p>
-          </>
-        )}
+        <div className="inset-row">
+          <span>Time</span>
+          <input
+            type="time"
+            className="time-input"
+            value={`${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`}
+            onChange={(e) => {
+              const [h, m] = e.target.value.split(":").map(Number);
+              onTimeChange(h, m);
+            }}
+          />
+        </div>
       </div>
+
+      {permissionDenied && (
+        <p className="text-error" style={{ fontSize: 13, marginTop: 10 }}>
+          Notification permission was denied. Allow notifications for this site in your browser settings to enable
+          reminders.
+        </p>
+      )}
     </div>
   );
 }

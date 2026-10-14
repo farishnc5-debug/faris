@@ -4,12 +4,13 @@ import { speak } from "../tts";
 import { useAppState } from "../hooks/useStore";
 import type { WordMastery } from "../types";
 import { LetterBlock, type SlotState } from "../components/LetterBlock";
+import { ChevronLeftIcon, ChevronRightIcon, SpeakerIcon } from "../components/Icons";
 
 const TIER_LABELS: Record<number, string> = {
-  1: "Tier 1 · 2-3 letters",
-  2: "Tier 2 · 4-5 letters",
-  3: "Tier 3 · 6-7 letters",
-  4: "Tier 4 · 8+ letters"
+  1: "2-3",
+  2: "4-5",
+  3: "6-7",
+  4: "8+"
 };
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -158,71 +159,80 @@ export function VocabularyScreen() {
   if (!activeWord) {
     return (
       <div>
-        <h1 className="screen-title">Improve Your Vocabulary</h1>
-        <div className="row-wrap" style={{ marginBottom: 16 }}>
+        <div className="nav-header">
+          <h1 className="large-title">Vocabulary</h1>
+        </div>
+
+        <div className="segmented" style={{ marginBottom: 20 }}>
           {([1, 2, 3, 4] as const).map((t) => (
-            <button
-              key={t}
-              className="chip"
-              style={{
-                border: "none",
-                cursor: "pointer",
-                background: tier === t ? "var(--teal)" : "var(--border)",
-                color: tier === t ? "white" : "var(--text)"
-              }}
-              onClick={() => setTier(t)}
-            >
-              {TIER_LABELS[t]}
+            <button key={t} className={`segment${tier === t ? " active" : ""}`} onClick={() => setTier(t)}>
+              {TIER_LABELS[t]} letters
             </button>
           ))}
         </div>
 
-        {words.map((word) => {
-          const label =
-            word.masteryStage === 0
-              ? "Not started"
-              : word.masteryStage === 1
-                ? "Stage 1 passed"
-                : word.masteryStage === 2
-                  ? "Stage 2 passed"
-                  : "Mastered!";
-          return (
-            <div key={word.id} className="card" style={{ cursor: "pointer" }} onClick={() => startPractice(word)}>
-              <div className="row" style={{ justifyContent: "space-between" }}>
-                <strong>{word.word}</strong>
-                <span className="text-muted" style={{ fontSize: 13 }}>
-                  {label}
+        <div className="inset-group">
+          {words.map((word, i) => {
+            const label =
+              word.masteryStage === 0
+                ? "Not started"
+                : word.masteryStage === 1
+                  ? "Stage 1 passed"
+                  : word.masteryStage === 2
+                    ? "Stage 2 passed"
+                    : "Mastered";
+            return (
+              <button
+                key={word.id}
+                className="inset-row tappable"
+                style={{ borderBottom: i === words.length - 1 ? "none" : undefined }}
+                onClick={() => startPractice(word)}
+              >
+                <span style={{ fontWeight: 600 }}>{word.word}</span>
+                <span className="row" style={{ gap: 6 }}>
+                  <span className={word.masteryStage === 3 ? "text-success" : "text-muted"} style={{ fontSize: 14 }}>
+                    {label}
+                  </span>
+                  <span className="chevron">
+                    <ChevronRightIcon />
+                  </span>
                 </span>
-              </div>
-            </div>
-          );
-        })}
+              </button>
+            );
+          })}
+        </div>
       </div>
     );
   }
 
   const stageLabel =
-    stage === 1 ? "Stage 1: Guided letter blocks" : stage === 2 ? "Stage 2: Reinforcement drill" : "Stage 3: Unassisted recall";
+    stage === 1 ? "Stage 1 · Guided" : stage === 2 ? "Stage 2 · Reinforcement" : "Stage 3 · Unassisted recall";
 
   return (
     <div>
-      <div className="row">
-        <button className="btn-icon" onClick={exitPractice} aria-label="Back to vocabulary list">
-          {"←"}
-        </button>
-        <h1 className="screen-title" style={{ margin: 0 }}>
+      <div className="nav-header">
+        <div className="row" style={{ justifyContent: "space-between" }}>
+          <button className="btn-icon" onClick={exitPractice} aria-label="Back to vocabulary list">
+            <ChevronLeftIcon />
+          </button>
+          <span className="chip">{stageLabel}</span>
+        </div>
+      </div>
+
+      <div className="row" style={{ justifyContent: "center", marginBottom: 4 }}>
+        <h1 className="large-title" style={{ margin: 0 }}>
           {activeWord.word}
         </h1>
         <button className="btn-icon" onClick={() => speak(activeWord.word)} aria-label={`Hear pronunciation of ${activeWord.word}`}>
-          {"\u{1F50A}"}
+          <SpeakerIcon />
         </button>
       </div>
-
-      <p style={{ fontWeight: 600 }}>{stageLabel}</p>
-      <p className="text-muted">{activeWord.definition}</p>
+      <p className="text-muted" style={{ textAlign: "center", marginTop: 0 }}>
+        {activeWord.definition}
+      </p>
 
       <div className="spacer-md" />
-      <div className="row-wrap">
+      <div className="row-wrap" style={{ justifyContent: "center" }}>
         {slots.map((slot, i) => (
           <LetterBlock key={i} letter={slot.filled} state={slot.state} />
         ))}
@@ -234,21 +244,20 @@ export function VocabularyScreen() {
         <>
           <Stage3Keyboard onLetterTap={submitRecallLetter} />
           {stage3Error && (
-            <>
-              <div className="spacer-sm" />
+            <div style={{ textAlign: "center", marginTop: 12 }}>
               <p className="text-error" style={{ fontWeight: 700 }}>
-                {"✗"} Try again
+                Try again
               </p>
               <button className="btn btn-outline" onClick={rewindToGuided}>
                 Step back to guided mode
               </button>
-            </>
+            </div>
           )}
         </>
       ) : (
-        <>
-          <p>Choose the correct letter:</p>
-          <div className="row-wrap">
+        <div style={{ textAlign: "center" }}>
+          <p className="text-muted">Choose the correct letter</p>
+          <div className="row-wrap" style={{ justifyContent: "center" }}>
             {slots[activeSlot]?.candidates.map((candidate) => {
               const slot = slots[activeSlot];
               const showAsCorrectHint = slot.state === "wrong" && candidate === slot.target;
@@ -262,20 +271,20 @@ export function VocabularyScreen() {
               );
             })}
           </div>
-        </>
+        </div>
       )}
 
       <div className="spacer-md" />
 
-      {complete && (
-        mastered ? (
+      {complete &&
+        (mastered ? (
           <div className="card" style={{ textAlign: "center" }}>
-            <p className="text-success" style={{ fontSize: 20, fontWeight: 700 }}>
-              {"\u{1F389}"} {activeWord.word} Mastered!
+            <p className="text-success" style={{ fontSize: 19, fontWeight: 700, margin: 0 }}>
+              {activeWord.word} Mastered
             </p>
           </div>
         ) : (
-          <div>
+          <div style={{ textAlign: "center" }}>
             <p className="text-success" style={{ fontWeight: 700 }}>
               Nice work! Ready for the next stage.
             </p>
@@ -283,8 +292,7 @@ export function VocabularyScreen() {
               Continue to Stage {stage + 1}
             </button>
           </div>
-        )
-      )}
+        ))}
     </div>
   );
 }
@@ -297,7 +305,7 @@ function Stage3Keyboard({ onLetterTap }: { onLetterTap: (letter: string) => void
   return (
     <div>
       {rows.map((row, i) => (
-        <div key={i} className="row-wrap" style={{ marginBottom: 6 }}>
+        <div key={i} className="row-wrap" style={{ marginBottom: 6, justifyContent: "center" }}>
           {row.map((letter) => (
             <LetterBlock key={letter} letter={letter} onClick={() => onLetterTap(letter)} />
           ))}
